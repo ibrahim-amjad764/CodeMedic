@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ */
+/* Fonts — Space Grotesk and JetBrains Mono are self-hosted variable   */
+/* fonts loaded via next/font/local in app/layout.tsx, which exposes   */
+/* them as the CSS variables referenced below (`@theme inline` tells   */
+/* Tailwind to use these at runtime rather than resolving at build     */
+/* time). Body copy intentionally uses the OS's own UI font — fast,    */
+/* familiar, and it keeps long paragraphs easy to read at any length.  */
+/* ------------------------------------------------------------------ */
+@theme inline {
+  --font-display: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
+  --font-body: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+}
+
+/* ------------------------------------------------------------------ */
+/* CodeMedic design tokens — "medical diagnostic dashboard x modern    */
+/* developer IDE." A dark navy chart, cyan vitals, violet for anything */
+/* AI-authored, and a status trio (success/warning/danger) that reads  */
+/* like a monitor readout.                                             */
+/* ------------------------------------------------------------------ */
+@theme {
+  --color-bg: #05070e;
+  --color-surface: #0e1526;
+  --color-surface-raised: #141c33;
+  --color-border: #1c2740;
+  --color-border-strong: #2a3655;
+
+  --color-cyan: #2fe0f0;
+  --color-cyan-soft: #0c3a42;
+
+  --color-violet: #9b7bfa;
+  --color-violet-soft: #241c47;
+
+  --color-success: #34d399;
+  --color-success-soft: #0d2b22;
+
+  --color-warning: #f5a623;
+  --color-warning-soft: #2e2109;
+
+  --color-danger: #f2545b;
+  --color-danger-soft: #2e1315;
+
+  --color-ink: #e8ecf6;
+  --color-ink-muted: #8b93ac;
+  --color-ink-faint: #4b5372;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  background-color: var(--color-bg);
+  background-image:
+    radial-gradient(ellipse 900px 500px at 12% -10%, rgba(47, 224, 240, 0.09), transparent 60%),
+    radial-gradient(ellipse 700px 500px at 100% 0%, rgba(155, 123, 250, 0.08), transparent 55%);
+  background-repeat: no-repeat;
+  color: var(--color-ink);
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+}
+
+::selection {
+  background-color: var(--color-cyan);
+  color: var(--color-bg);
+}
+
+/* Visible, on-brand focus ring for keyboard navigation (never rely on
+   color alone — see accessibility notes in README). */
+:focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Thin, quiet scrollbars that still work fine without this (progressive
+   enhancement only). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border-strong) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-strong);
+  border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Signature motif: a traveling EKG pulse used in the loading state    */
+/* and as a quiet header accent. See components/ui/PulseTrace.tsx.     */
+/* ------------------------------------------------------------------ */
+@keyframes pulse-trace {
+  from {
+    stroke-dashoffset: 32;
+  }
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+.animate-pulse-trace {
+  animation: pulse-trace 2.4s linear infinite;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
