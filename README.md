@@ -402,6 +402,12 @@ This project is meant to demonstrate:
 - **UX** — real loading/empty/error states, accessible by default, confidence communicated honestly instead of oversold
 - **Product thinking** — a deliberately small surface area, with the things left out documented as decisions rather than gaps
 
-## 28. License
+## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT License © 2026
+
+---
+
+## Author
+
+- GitHub: [Ibrahim Amjad](https://github.com/ibrahim-amjad764)
