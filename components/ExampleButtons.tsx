@@ -1,6 +1,20 @@
 import clsx from "clsx";
 import { FlaskConical } from "lucide-react";
 import { EXAMPLES, type DiagnoseExample } from "@/lib/examples";
+import type { Language } from "@/types/diagnosis";
+
+const LANGUAGE_SHORT: Record<Language, string> = {
+  python: "Py",
+  javascript: "JS",
+  typescript: "TS",
+  react: "React",
+  java: "Java",
+  cpp: "C++",
+  csharp: "C#",
+  go: "Go",
+  sql: "SQL",
+  other: "Other",
+};
 
 interface ExampleButtonsProps {
   onSelect: (example: DiagnoseExample) => void;
@@ -29,13 +43,16 @@ export function ExampleButtons({ onSelect, activeId }: ExampleButtonsProps) {
               onClick={() => onSelect(example)}
               aria-pressed={isActive}
               className={clsx(
-                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
+                "rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all duration-150",
                 isActive
                   ? "border-cyan/60 bg-cyan-soft text-cyan"
                   : "border-border bg-surface text-ink-muted hover:border-border-strong hover:text-ink",
               )}
             >
               {example.buttonLabel}
+              <span className="ml-1.5 font-mono text-[10px] uppercase tracking-wide opacity-70">
+                {LANGUAGE_SHORT[example.language]}
+              </span>
             </button>
           );
         })}

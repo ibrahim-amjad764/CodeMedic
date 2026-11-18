@@ -1,30 +1,34 @@
 import { PulseTrace } from "@/components/ui/PulseTrace";
+import { Stethoscope } from "lucide-react";
 
-// Replace with your own repository URL before publishing this project.
-const REPO_URL = "#";
+// Optional — set NEXT_PUBLIC_REPO_URL in .env.local to show the GitHub link.
+// When unset the link is hidden entirely rather than pointing at a placeholder.
+const REPO_URL = process.env.NEXT_PUBLIC_REPO_URL;
 
 export function Header() {
   return (
     <header className="sticky top-0 z-20 border-b border-border/80 bg-bg/85 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
         <div className="flex items-center gap-2.5">
-          <span className="text-xl" aria-hidden="true">
-            🩺
+          <span className="grid h-8 w-8 place-items-center rounded-[9px] border border-border-strong bg-surface shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]">
+            <Stethoscope className="h-4 w-4 text-cyan" aria-hidden="true" />
           </span>
           <span className="font-display text-lg font-semibold tracking-tight text-ink">
             CodeMedic
           </span>
           <PulseTrace className="hidden h-4 w-16 text-cyan/70 sm:block" />
         </div>
-        <a
-          href={REPO_URL}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-lg border border-border px-3 py-2 text-sm font-medium text-ink-muted transition-colors hover:border-border-strong hover:text-ink"
-        >
-          <GithubMark className="h-4 w-4" aria-hidden="true" />
-          <span className="hidden sm:inline">GitHub</span>
-        </a>
+        {REPO_URL && (
+          <a
+            href={REPO_URL}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-2 rounded-full border border-border-strong bg-surface px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-wider text-ink-muted transition-colors duration-150 hover:border-cyan/50 hover:text-cyan"
+          >
+            <GithubMark className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">GitHub</span>
+          </a>
+        )}
       </div>
     </header>
   );

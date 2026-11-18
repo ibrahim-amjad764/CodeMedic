@@ -27,6 +27,7 @@
   --color-surface-raised: #141c33;
   --color-border: #1c2740;
   --color-border-strong: #2a3655;
+  --color-border-input: #55648c;
 
   --color-cyan: #2fe0f0;
   --color-cyan-soft: #0c3a42;
@@ -45,7 +46,9 @@
 
   --color-ink: #e8ecf6;
   --color-ink-muted: #8b93ac;
-  --color-ink-faint: #4b5372;
+  --color-ink-faint: #7a86a3;
+  --color-code-bg: #0a0e18;
+  --color-well: #090e1a;
 }
 
 :root {
@@ -123,6 +126,133 @@ body {
 }
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out both;
+}
+
+/* ------------------------------------------------------------------ */
+/* Phase 2 — Command Deck depth & motion. All animation is transform/  */
+/* opacity only (GPU-composited) and collapses under reduced-motion.   */
+/* ------------------------------------------------------------------ */
+
+/* Raised workspace panel: layered dark surface, hairline border,
+   inset top highlight, long soft drop shadow. */
+.panel-card {
+  background: linear-gradient(180deg, var(--color-surface-raised), var(--color-surface));
+  border: 1px solid var(--color-border-strong);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow:
+    0 20px 50px -28px rgba(0, 0, 0, 0.75),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+.panel-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid var(--color-border);
+  background: rgba(9, 14, 26, 0.6);
+}
+
+/* Terminal-style keyboard hint chip. */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  border: 1px solid var(--color-border-strong);
+  border-bottom-width: 2px;
+  border-radius: 5px;
+  background: var(--color-surface-raised);
+  padding: 1px 6px;
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--color-ink-muted);
+}
+
+/* Pulsing "live" status dot on the hero vitals card. */
+@keyframes live-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.animate-live-dot {
+  animation: live-dot 2s ease-in-out infinite;
+}
+
+/* Blinking terminal caret. */
+@keyframes caret-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+.animate-caret {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+/* Horizontal cyan scan band sweeping top→bottom over the code input
+   while a diagnosis is running. translateY % resolves against the
+   full-height overlay, so this stays correct at any textarea size. */
+@keyframes scanline {
+  from {
+    transform: translateY(-40%);
+  }
+  to {
+    transform: translateY(105%);
+  }
+}
+.animate-scanline {
+  animation: scanline 1.9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Stagger helper for one-shot reveals — pair with inline animationDelay. */
+.reveal {
+  animation: fade-in-up 0.35s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Report cascade: same reveal, tighter timing controlled per-section. */
+.report-step {
+  animation: fade-in-up 0.3s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* Numbered mono section label used inside the workspace panels
+   ("01 intake // symptoms"). */
+.panel-section-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--color-border);
+  font-family: var(--font-jetbrains-mono), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink-faint);
+}
+
+/* Copy-button checkmark pop (transform/opacity only). */
+@keyframes check-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.animate-check-pop {
+  animation: check-pop 0.22s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 @media (prefers-reduced-motion: reduce) {

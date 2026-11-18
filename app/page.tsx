@@ -20,6 +20,13 @@ type ViewState =
 
 const GENERIC_FAILURE_MESSAGE = "CodeMedic couldn't complete the diagnosis. Please try again.";
 
+const PANEL_STATUS: Record<ViewState["status"], string> = {
+  empty: "Awaiting input",
+  loading: "Diagnosing…",
+  error: "Diagnosis failed",
+  success: "Diagnosis complete",
+};
+
 export default function Home() {
   const [view, setView] = useState<ViewState>({ status: "empty" });
   const [language, setLanguage] = useState<Language>("python");
@@ -103,48 +110,64 @@ export default function Home() {
       <Hero onDiagnoseClick={handleDiagnoseCta} onTryExampleClick={handleTryExampleCta} />
 
       <main ref={workspaceRef} className="mx-auto max-w-6xl scroll-mt-20 px-5 py-10 sm:px-8 sm:py-14">
-        <div className="grid gap-6 lg:grid-cols-2 lg:gap-8 lg:items-start">
-          <section
-            aria-labelledby="symptoms-heading"
-            className="rounded-2xl border border-border bg-surface/60 p-5 sm:p-7"
-          >
-            <h2 id="symptoms-heading" className="sr-only">
-              Symptoms
-            </h2>
-            <DebugForm
-              language={language}
-              error={errorText}
-              code={code}
-              expectedBehavior={expectedBehavior}
-              onLanguageChange={edited(setLanguage)}
-              onErrorChange={edited(setErrorText)}
-              onCodeChange={edited(setCode)}
-              onExpectedBehaviorChange={edited(setExpectedBehavior)}
-              onSubmit={runDiagnosis}
-              isLoading={isLoading}
-              errorFieldRef={errorFieldRef}
-            />
-            <div className="mt-6 border-t border-border pt-5">
-              <ExampleButtons onSelect={handleSelectExample} activeId={activeExampleId} />
-            </div>
-          </section>
+        <div className="panel-card">
+          <div className="panel-head">
+            <span className="flex gap-1.5" aria-hidden="true">
+              <span className="h-2.5 w-2.5 rounded-full bg-success/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-cyan/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-violet/70" />
+            </span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">
+              codemedic — diagnosis console
+            </span>
+            <span className="ml-auto flex items-center gap-2 font-mono text-[11px] uppercase tracking-widest text-ink-faint">
+              <span
+                className={`h-1.5 w-1.5 rounded-full ${isLoading ? "animate-live-dot bg-warning" : "bg-success"}`}
+                aria-hidden="true"
+              />
+              {PANEL_STATUS[view.status]}
+            </span>
+          </div>
+          <div className="grid gap-8 p-5 sm:p-8 lg:grid-cols-2 lg:gap-10 lg:items-start">
+            <section aria-labelledby="symptoms-heading" className="min-w-0">
+              <h2 id="symptoms-heading" className="panel-section-label">
+                <span className="text-cyan">01</span> intake // symptoms
+              </h2>
+              <DebugForm
+                language={language}
+                error={errorText}
+                code={code}
+                expectedBehavior={expectedBehavior}
+                onLanguageChange={edited(setLanguage)}
+                onErrorChange={edited(setErrorText)}
+                onCodeChange={edited(setCode)}
+                onExpectedBehaviorChange={edited(setExpectedBehavior)}
+                onSubmit={runDiagnosis}
+                isLoading={isLoading}
+                errorFieldRef={errorFieldRef}
+              />
+              <div className="mt-6 border-t border-border pt-5">
+                <ExampleButtons onSelect={handleSelectExample} activeId={activeExampleId} />
+              </div>
+            </section>
 
-          <section
-            aria-labelledby="diagnosis-heading"
-            className="rounded-2xl border border-border bg-surface/60 p-5 sm:p-7"
-          >
-            <h2 id="diagnosis-heading" className="sr-only">
-              Diagnosis
-            </h2>
-            {view.status === "empty" && <EmptyState />}
-            {view.status === "loading" && <LoadingDiagnosis />}
-            {view.status === "error" && (
-              <ErrorState message={view.message} onRetry={runDiagnosis} />
-            )}
-            {view.status === "success" && (
-              <DiagnosisReport diagnosis={view.diagnosis} language={language} />
-            )}
-          </section>
+            <section aria-labelledby="diagnosis-heading" className="min-w-0">
+              <h2 id="diagnosis-heading" className="panel-section-label">
+                <span className="text-cyan">02</span> output // diagnosis
+              </h2>
+              <div aria-live="polite" className="sr-only">
+                {PANEL_STATUS[view.status]}
+              </div>
+              {view.status === "empty" && <EmptyState />}
+              {view.status === "loading" && <LoadingDiagnosis code={code} />}
+              {view.status === "error" && (
+                <ErrorState message={view.message} onRetry={runDiagnosis} />
+              )}
+              {view.status === "success" && (
+                <DiagnosisReport diagnosis={view.diagnosis} language={language} />
+              )}
+            </section>
+          </div>
         </div>
       </main>
     </div>

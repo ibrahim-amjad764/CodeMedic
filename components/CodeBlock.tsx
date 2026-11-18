@@ -44,17 +44,31 @@ export function CodeBlock({
     try {
       await navigator.clipboard.writeText(code);
       setCopied(true);
-      window.setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Clipboard access can be denied (permissions/insecure context).
-      // Failing quietly is preferable to a scary console error here.
+      // Clipboard API can be denied (permissions/insecure context). Fall back
+      // to the deprecated-but-widely-supported execCommand path before
+      // giving up quietly — still preferable to a scary console error.
+      try {
+        const area = document.createElement("textarea");
+        area.value = code;
+        area.style.position = "fixed";
+        area.style.opacity = "0";
+        document.body.appendChild(area);
+        area.select();
+        document.execCommand("copy");
+        document.body.removeChild(area);
+        setCopied(true);
+      } catch {
+        // Both paths failed — leave `copied` false and say nothing.
+      }
     }
+    window.setTimeout(() => setCopied(false), 2000);
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-[#0a0e18]">
-      <div className="flex items-center justify-between gap-3 border-b border-border px-3.5 py-2">
-        <span className="truncate font-mono text-[11px] uppercase tracking-wide text-ink-muted">
+    <div className="overflow-hidden rounded-[10px] border border-border-strong bg-code-bg shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+      <div className="flex items-center justify-between gap-3 border-b border-border bg-well/60 px-3.5 py-2">
+        <span className="truncate font-mono text-[11px] uppercase tracking-[0.14em] text-ink-faint">
           {label ?? language}
         </span>
         {showCopy && (
@@ -65,7 +79,11 @@ export function CodeBlock({
           >
             {copied ? (
               <>
-                <Check className="h-3.5 w-3.5 text-success" aria-hidden="true" />
+                <Check
+                  key="copied"
+                  className="animate-check-pop h-3.5 w-3.5 text-success"
+                  aria-hidden="true"
+                />
                 Copied
               </>
             ) : (
@@ -74,6 +92,9 @@ export function CodeBlock({
                 {copyLabel}
               </>
             )}
+            <span aria-live="polite" className="sr-only">
+              {copied ? "Copied to clipboard" : ""}
+            </span>
           </button>
         )}
       </div>

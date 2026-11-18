@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CodeMedic - Mockup: Soft Clinical</title>
+<style>
+@font-face{font-family:'Space Grotesk';src:url('fonts/SpaceGrotesk-Variable.woff2') format('woff2');font-weight:300 700}
+@font-face{font-family:'JetBrains Mono';src:url('fonts/JetBrainsMono-Variable.woff2') format('woff2');font-weight:100 800}
+:root{
+  --bg:#070a14; --ink:#eef1fa; --ink-muted:#9aa3bd; --ink-faint:#7a86a3;
+  --cyan:#2fe0f0; --violet:#9b7bfa; --success:#34d399;
+  --glass:rgba(148,163,216,.06); --glass-brd:rgba(148,163,216,.14);
+  --code-bg:#0a0e1c;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:ui-sans-serif,system-ui,sans-serif;min-height:100vh;overflow-x:hidden}
+.disp{font-family:'Space Grotesk',sans-serif}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.wrap{max-width:1140px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none}
+.aurora::before{content:'';position:absolute;width:900px;height:900px;border-radius:50%;top:-350px;left:-150px;background:radial-gradient(circle,rgba(47,224,240,.16),transparent 65%);filter:blur(10px)}
+.aurora::after{content:'';position:absolute;width:800px;height:800px;border-radius:50%;top:-250px;right:-150px;background:radial-gradient(circle,rgba(155,123,250,.15),transparent 65%);filter:blur(10px)}
+.aurora .band{position:absolute;inset:0;background:radial-gradient(ellipse 100% 55% at 50% -10%,rgba(20,28,51,.55),transparent)}
+.grain{position:fixed;inset:0;z-index:0;opacity:.5;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .03 0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E")}
+header{position:sticky;top:0;z-index:20;backdrop-filter:blur(16px);background:rgba(7,10,20,.6);border-bottom:1px solid rgba(148,163,216,.08)}
+.hbar{display:flex;align-items:center;justify-content:space-between;height:62px}
+.brand{display:flex;align-items:center;gap:11px}
+.mark{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(47,224,240,.2),rgba(155,123,250,.2));border:1px solid var(--glass-brd)}
+.mark svg{width:18px;height:18px}
+.brand b{font-family:'Space Grotesk';font-size:16px;font-weight:600;letter-spacing:-.02em}
+.gh{font-size:12px;color:var(--ink-muted);border:1px solid var(--glass-brd);background:var(--glass);border-radius:999px;padding:8px 16px;backdrop-filter:blur(8px)}
+.hero{padding:88px 0 64px;text-align:center}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan);border:1px solid rgba(47,224,240,.3);background:rgba(47,224,240,.08);border-radius:999px;padding:7px 16px}
+.badge i{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+h1{font-family:'Space Grotesk';font-size:58px;font-weight:600;letter-spacing:-.035em;line-height:1.06;margin:26px auto 20px;max-width:16ch}
+h1 em{font-style:normal;background:linear-gradient(100deg,var(--cyan),var(--violet));-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{font-size:16px;color:var(--ink-muted);max-width:52ch;margin:0 auto;line-height:1.7}
+.cta-row{display:flex;gap:14px;justify-content:center;margin-top:36px}
+.btn-p{display:inline-flex;align-items:center;gap:9px;background:linear-gradient(120deg,#2fe0f0,#38bdf8);color:#04121a;font-weight:700;font-size:14px;padding:15px 30px;border-radius:14px;border:none;cursor:pointer;box-shadow:0 10px 40px -10px rgba(47,224,240,.55),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn-s{display:inline-flex;align-items:center;font-weight:600;font-size:14px;padding:15px 28px;border-radius:14px;cursor:pointer;border:1px solid var(--glass-brd);background:var(--glass);color:var(--ink);backdrop-filter:blur(10px)}
+.trust{display:flex;justify-content:center;gap:26px;margin-top:34px;font-family:'JetBrains Mono';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-faint)}
+.trust span::before{content:'\25CF';color:var(--cyan);margin-right:7px;font-size:8px;vertical-align:1px}
+main{padding:24px 0 84px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start}
+.glass{background:linear-gradient(165deg,rgba(148,163,216,.09),rgba(148,163,216,.04));border:1px solid var(--glass-brd);border-radius:24px;backdrop-filter:blur(14px);box-shadow:0 30px 70px -35px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.g-head{display:flex;align-items:center;gap:12px;padding:20px 26px 0}
+.g-ico{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;flex-shrink:0}
+.g-ico.c{background:rgba(47,224,240,.12);color:var(--cyan);border:1px solid rgba(47,224,240,.25)}
+.g-ico.v{background:rgba(155,123,250,.12);color:var(--violet);border:1px solid rgba(155,123,250,.25)}
+.g-head h3{font-family:'Space Grotesk';font-size:15px;font-weight:600;letter-spacing:-.01em}
+.g-head .sub2{font-size:11px;color:var(--ink-faint);margin-top:2px}
+.g-head .right{margin-left:auto}
+.conf-pill{font-size:11px;font-weight:600;color:var(--success);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);border-radius:999px;padding:6px 13px}
+.g-body{padding:22px 26px 28px}
+.flabel{font-size:12px;font-weight:600;color:var(--ink);margin-bottom:8px;display:flex;justify-content:space-between;align-items:baseline}
+.flab-r{font-family:'JetBrains Mono';font-size:10px;font-weight:400;color:var(--ink-faint)}
+.well{background:rgba(7,10,20,.55);border:1px solid rgba(148,163,216,.16);border-radius:14px;padding:13px 16px;font-size:13px;color:var(--ink);width:100%;backdrop-filter:blur(6px)}
+.well.mono{font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75}
+.well.ph{color:var(--ink-faint)}
+.well:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 4px rgba(47,224,240,.12)}
+.selrow{display:flex;justify-content:space-between;align-items:center;color:var(--ink-muted)}
+.selrow .chev{color:var(--ink-faint)}
+.examples{margin-top:24px}
+.ex-label{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink-faint);margin-bottom:11px}
+.pills{display:flex;flex-wrap:wrap;gap:9px}
+.pill{font-size:12px;font-weight:500;color:var(--ink-muted);border:1px solid var(--glass-brd);background:rgba(148,163,216,.05);border-radius:999px;padding:8px 16px;cursor:pointer}
+.pill.on{border-color:rgba(47,224,240,.5);color:var(--cyan);background:rgba(47,224,240,.1)}
+.pill .lg{font-family:'JetBrains Mono';font-size:9px;opacity:.6;margin-left:6px}
+.submit{width:100%;margin-top:24px;background:linear-gradient(120deg,#2fe0f0,#38bdf8);color:#04121a;font-family:'Space Grotesk';font-weight:700;font-size:14px;padding:15px;border:none;border-radius:14px;cursor:pointer;box-shadow:0 12px 36px -12px rgba(47,224,240,.6)}
+.r-hero{display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.r-hero h3{font-family:'Space Grotesk';font-size:19px;font-weight:600;letter-spacing:-.02em}
+.r-hero .st{font-family:'JetBrains Mono';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--success)}
+.rsec{background:rgba(7,10,20,.4);border:1px solid rgba(148,163,216,.1);border-radius:18px;padding:18px 20px;margin-bottom:14px}
+.rsec:last-child{margin-bottom:0}
+.rsec-head{display:flex;align-items:center;gap:11px;margin-bottom:10px}
+.rsec-ico{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;flex-shrink:0}
+.rsec-ico.c{background:rgba(47,224,240,.1);color:var(--cyan)}
+.rsec-ico.v{background:rgba(155,123,250,.1);color:var(--violet)}
+.rsec-ico.s{background:rgba(52,211,153,.1);color:var(--success)}
+.rsec-head h4{font-family:'Space Grotesk';font-size:13.5px;font-weight:600}
+.rsec-head .tag{margin-left:auto;font-family:'JetBrains Mono';font-size:9px;letter-spacing:.12em;color:var(--ink-faint);text-transform:uppercase}
+.rsec p,.rsec li{font-size:13px;line-height:1.7;color:var(--ink-muted)}
+.rsec ul{list-style:none}
+.rsec li{display:flex;gap:9px;margin-top:6px}
+.rsec li i{font-style:normal;color:var(--cyan);flex-shrink:0}
+.code{background:var(--code-bg);border:1px solid rgba(148,163,216,.14);border-radius:14px;overflow:hidden;margin-top:10px}
+.code-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid rgba(148,163,216,.1);font-family:'JetBrains Mono';font-size:10px;color:var(--ink-faint);letter-spacing:.1em;text-transform:uppercase}
+.code-bar button{background:none;border:none;color:var(--ink-muted);font-size:11px;cursor:pointer;font-family:'JetBrains Mono'}
+.code pre{padding:14px 16px;font-family:'JetBrains Mono';font-size:12px;line-height:1.8;color:#c9d4ea;overflow-x:auto}
+.kw{color:var(--violet)}.fn{color:var(--cyan)}.st{color:var(--success)}.cm{color:var(--ink-faint)}
+.disclaimer{margin-top:18px;font-size:11px;color:var(--ink-faint);line-height:1.65;text-align:center}
+@media(max-width:900px){.grid{grid-template-columns:1fr}h1{font-size:38px}.hero{padding:60px 0 44px}.trust{flex-wrap:wrap;gap:14px}}
+</style>
+</head>
+<body>
+<div class="aurora"><div class="band"></div></div>
+<div class="grain"></div>
+<header><div class="wrap hbar">
+  <div class="brand"><span class="mark"><svg viewBox="0 0 64 64"><path d="M10 32 H20 L26 16 L34 48 L40 24 L46 32 H54" fill="none" stroke="#2fe0f0" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg></span><b>CodeMedic</b></div>
+  <span class="gh">GitHub &#8599;</span>
+</div></header>
+<section class="hero"><div class="wrap">
+  <div class="badge"><i></i>AI Debugging Doctor</div>
+  <h1>Your code is sick.<br>We write the <em>prescription.</em></h1>
+  <p class="sub">Paste an error and broken code &mdash; CodeMedic diagnoses the root cause, shows the evidence, and prescribes a minimal fix with a plain-English explanation.</p>
+  <div class="cta-row"><button class="btn-p">Diagnose My Bug</button><button class="btn-s">Try an Example</button></div>
+  <div class="trust"><span>Evidence-first</span><span>Minimal fixes</span><span>Zod-validated</span><span>10 languages</span></div>
+</div></section>
+<main><div class="wrap grid">
+  <section class="glass">
+    <div class="g-head">
+      <span class="g-ico c"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span>
+      <div><h3>Patient Intake</h3><div class="sub2">Describe the symptoms</div></div>
+    </div>
+    <div class="g-body">
+      <div class="flabel"><span>Language</span></div>
+      <div class="well selrow"><span>Python</span><span class="chev">&#9662;</span></div>
+      <div style="height:14px"></div>
+      <div class="flabel"><span>Error Message</span><span class="flab-r">86 / 5,000</span></div>
+      <div class="well ph">Paste the error message or describe the symptom&hellip;</div>
+      <div style="height:14px"></div>
+      <div class="flabel"><span>Broken Code</span><span class="flab-r">74 / 30,000</span></div>
+      <div class="well mono ph">age = input("Enter your age: ")<br>next_year = age + 1<br><br>print(next_year)</div>
+      <div style="height:14px"></div>
+      <div class="flabel"><span>Expected Behavior (optional)</span><span class="flab-r">33 / 5,000</span></div>
+      <div class="well ph">What did you expect the code to do?</div>
+      <button class="submit">Diagnose Bug &rarr;</button>
+      <div class="examples">
+        <div class="ex-label">Try an example</div>
+        <div class="pills">
+          <span class="pill on">Python TypeError<span class="lg">Py</span></span>
+          <span class="pill">JavaScript Undefined<span class="lg">JS</span></span>
+          <span class="pill">React State Bug<span class="lg">React</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="glass">
+    <div class="g-head">
+      <span class="g-ico v"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></span>
+      <div><h3>Diagnostic Report</h3><div class="sub2">AI-generated &middot; verify before applying</div></div>
+      <span class="right conf-pill">&#9679; High confidence</span>
+    </div>
+    <div class="g-body">
+      <div class="r-hero"><h3>Diagnosis</h3><span class="st">&#9679; Complete</span></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/><path d="M8 15v1a6 6 0 0 0 6 6a6 6 0 0 0 6-6v-4"/><circle cx="20" cy="10" r="2"/></svg></span><h4>Diagnosis</h4><span class="tag">01 &middot; Symptom</span></div>
+        <p>The program crashes because <b style="color:var(--ink)">age</b> is a string and <b style="color:var(--ink)">age + 1</b> mixes str + int.</p></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></span><h4>Root Cause</h4><span class="tag">02 &middot; Cause</span></div>
+        <p><span class="mono" style="font-size:11px;color:var(--ink)">input()</span> returns str; no implicit coercion exists for <span class="mono" style="font-size:11px;color:var(--ink)">+</span>.</p></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico c"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span><h4>Evidence</h4><span class="tag">03 &middot; Proof</span></div>
+        <ul><li>Error names 'int' and 'str' operands</li><li>age bound via input() &rarr; str</li><li>line 2 mixes types</li></ul></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico v"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/></svg></span><h4>Treatment</h4><span class="tag">04 &middot; Fix</span></div>
+        <div class="code"><div class="code-bar"><span>Fixed Python</span><button>Copy Fix</button></div>
+        <pre>age = <span class="fn">int</span>(<span class="fn">input</span>(<span class="st">"Enter your age: "</span>))
+next_year = age + <span class="kw">1</span>
+
+<span class="fn">print</span>(next_year)</pre></div></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico v"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5a3 3 0 1 0-5.997.125 4 4 0 0 0-2.526 5.77 4 4 0 0 0 .556 6.588A4 4 0 1 0 12 18Z"/></svg></span><h4>Why This Works</h4><span class="tag">05 &middot; Logic</span></div>
+        <p><span class="mono" style="font-size:11px;color:var(--ink)">int()</span> parses input to a number first &mdash; the addition becomes valid int + int arithmetic.</p></div>
+      <div class="rsec"><div class="rsec-head"><span class="rsec-ico s"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><h4>Prevention</h4><span class="tag">06 &middot; Guard</span></div>
+        <ul><li>Convert input() results before math</li><li>Wrap parsing in try/except ValueError</li></ul></div>
+      <p class="disclaimer">CodeMedic's diagnosis is AI-generated and may be incorrect &mdash; use your own judgment before applying the fix.</p>
+    </div>
+  </section>
+</div></main>
+</body>
+</html>

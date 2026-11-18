@@ -1,9 +1,10 @@
 import type { ReactNode } from "react";
 import clsx from "clsx";
-import { Stethoscope, Target, Search, Pill, Brain, ShieldCheck, CircleCheck } from "lucide-react";
+import { Stethoscope, Target, Search, Pill, Brain, ShieldCheck, SquareTerminal } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 import { CodeBlock } from "@/components/CodeBlock";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { Badge } from "@/components/ui/Badge";
 import { languageLabel, type Diagnosis, type Language } from "@/types/diagnosis";
 
 interface DiagnosisReportProps {
@@ -11,36 +12,53 @@ interface DiagnosisReportProps {
   language: Language;
 }
 
+const STEP_MS = 50;
+const BASE_DELAY_MS = 80;
+
 /**
  * The full report, in the same order CodeMedic reasons through a bug:
  * Diagnosis -> Root Cause -> Evidence -> Treatment -> Why it works ->
- * Prevention. That order is real information (it's the diagnostic
- * pipeline itself), so each step is numbered and connected by a single
- * vertical line down the left rail.
+ * Prevention. Numbered clinical rails (01-06) with monospace headers,
+ * an EXIT 0 completion badge, and a staggered 50ms cascade entrance.
  */
 export function DiagnosisReport({ diagnosis, language }: DiagnosisReportProps) {
+  let step = 0;
+  const delay = () => `${BASE_DELAY_MS + step++ * STEP_MS}ms`;
+
   return (
-    <div className="animate-fade-in-up space-y-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5">
-        <span className="inline-flex items-center gap-2 text-sm font-semibold text-success">
-          <CircleCheck className="h-4 w-4" aria-hidden="true" />
-          Diagnosis complete
-        </span>
-        <ConfidenceBadge confidence={diagnosis.confidence} />
-      </div>
+    <div>
+      <header
+        className="report-step flex flex-wrap items-center justify-between gap-3 border-b border-border pb-5"
+        style={{ animationDelay: delay() }}
+      >
+        <div>
+          <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-faint">
+            output // diagnosis.report
+          </p>
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-wider text-ink-faint/80">
+            patient lang: {languageLabel(language)}
+          </p>
+        </div>
+        <div className="flex items-center gap-2">
+          <Badge tone="success" icon={<SquareTerminal className="h-3 w-3" aria-hidden="true" />}>
+            exit 0
+          </Badge>
+          <ConfidenceBadge confidence={diagnosis.confidence} />
+        </div>
+      </header>
 
-      <div className="relative space-y-7">
-        <div aria-hidden="true" className="absolute bottom-2 left-4 top-2 w-px bg-border" />
+      <div className="relative mt-7 space-y-8">
+        <div aria-hidden="true" className="absolute bottom-3 left-[17px] top-3 w-px bg-border" />
 
-        <ReportSection icon={Stethoscope} title="Diagnosis" tone="cyan">
+        <ReportSection index={1} icon={Stethoscope} title="diagnosis" tone="cyan" delay={delay()}>
           <p className="text-sm leading-relaxed text-ink">{diagnosis.diagnosis}</p>
         </ReportSection>
 
-        <ReportSection icon={Target} title="Root Cause" tone="cyan">
+        <ReportSection index={2} icon={Target} title="root cause" tone="cyan" delay={delay()}>
           <p className="text-sm leading-relaxed text-ink">{diagnosis.rootCause}</p>
         </ReportSection>
 
-        <ReportSection icon={Search} title="Evidence" tone="cyan">
+        <ReportSection index={3} icon={Search} title="evidence" tone="cyan" delay={delay()}>
           <ul className="space-y-2">
             {diagnosis.evidence.map((item, i) => (
               <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-ink">
@@ -54,11 +72,11 @@ export function DiagnosisReport({ diagnosis, language }: DiagnosisReportProps) {
           </ul>
         </ReportSection>
 
-        <ReportSection icon={Pill} title="Treatment" tone="violet">
+        <ReportSection index={4} icon={Pill} title="treatment" tone="violet" delay={delay()}>
           <CodeBlock
             code={diagnosis.fixedCode}
             language={language}
-            label={`Fixed ${languageLabel(language)}`}
+            label={`fixed ${languageLabel(language)}`}
             copyLabel="Copy Fix"
           />
           {diagnosis.changes.length > 0 && (
@@ -76,11 +94,11 @@ export function DiagnosisReport({ diagnosis, language }: DiagnosisReportProps) {
           )}
         </ReportSection>
 
-        <ReportSection icon={Brain} title="Why This Works" tone="violet">
+        <ReportSection index={5} icon={Brain} title="why this works" tone="violet" delay={delay()}>
           <p className="text-sm leading-relaxed text-ink">{diagnosis.explanation}</p>
         </ReportSection>
 
-        <ReportSection icon={ShieldCheck} title="Prevention" tone="success" last>
+        <ReportSection index={6} icon={ShieldCheck} title="prevention" tone="success" delay={delay()} last>
           <ul className="space-y-2">
             {diagnosis.prevention.map((tip, i) => (
               <li key={i} className="flex gap-2.5 text-sm leading-relaxed text-ink">
@@ -95,7 +113,10 @@ export function DiagnosisReport({ diagnosis, language }: DiagnosisReportProps) {
         </ReportSection>
       </div>
 
-      <p className="border-t border-border pt-4 text-xs leading-relaxed text-ink-faint">
+      <p
+        className="report-step mt-8 border-t border-border pt-4 text-xs leading-relaxed text-ink-faint"
+        style={{ animationDelay: delay() }}
+      >
         CodeMedic&rsquo;s diagnosis is generated by an AI model and may be incorrect, especially at
         lower confidence — use your own judgment before applying the fix.
       </p>
@@ -110,27 +131,45 @@ const TONE_CLASSES = {
 } as const;
 
 interface ReportSectionProps {
+  index: number;
   icon: LucideIcon;
   title: string;
   tone: keyof typeof TONE_CLASSES;
   children: ReactNode;
+  delay: string;
   last?: boolean;
 }
 
-function ReportSection({ icon: Icon, title, tone, children, last = false }: ReportSectionProps) {
+function ReportSection({
+  index,
+  icon: Icon,
+  title,
+  tone,
+  children,
+  delay,
+  last = false,
+}: ReportSectionProps) {
+  const num = String(index).padStart(2, "0");
   return (
-    <div className={clsx("relative flex gap-4", last && "pb-0")}>
+    <div
+      className={clsx("report-step relative flex gap-4", last && "pb-0")}
+      style={{ animationDelay: delay }}
+    >
       <div
         className={clsx(
-          "relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border bg-bg",
+          "relative z-10 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border bg-bg",
           TONE_CLASSES[tone],
         )}
       >
         <Icon className="h-4 w-4" aria-hidden="true" />
       </div>
-      <div className="min-w-0 flex-1 pb-1 pt-1">
-        <h3 className="font-display text-sm font-semibold tracking-wide text-ink">{title}</h3>
-        <div className="mt-2">{children}</div>
+      <div className="min-w-0 flex-1 pb-1 pt-0.5">
+        <h3 className="font-mono text-[11px] font-semibold uppercase tracking-[0.14em]">
+          <span className="text-cyan">{num}</span>
+          <span className="mx-1.5 text-ink-faint">{"//"}</span>
+          <span className="text-ink-muted">{title}</span>
+        </h3>
+        <div className="mt-2.5">{children}</div>
       </div>
     </div>
   );

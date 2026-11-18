@@ -1,4 +1,4 @@
-import { TriangleAlert, RotateCcw } from "lucide-react";
+import { TriangleAlert, RotateCcw, SquareTerminal } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 
 interface ErrorStateProps {
@@ -16,10 +16,15 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
     <div
       role="alert"
-      className="flex h-full flex-col items-center justify-center gap-5 rounded-xl border border-danger/30 bg-danger-soft/30 px-6 py-12 text-center"
+      className="flex h-full flex-col items-center justify-center gap-5 rounded-xl border border-danger/30 bg-danger-soft/20 px-6 py-12 text-center"
     >
-      <div className="flex h-14 w-14 items-center justify-center rounded-full border border-danger/40 bg-danger-soft text-danger">
-        <TriangleAlert className="h-6 w-6" aria-hidden="true" />
+      <div className="flex flex-col items-center gap-3">
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-danger/40 bg-danger-soft text-danger">
+          <TriangleAlert className="h-6 w-6" aria-hidden="true" />
+        </div>
+        <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-danger">
+          exit 1 // diagnosis failed
+        </p>
       </div>
       <p className="max-w-sm text-sm leading-relaxed text-ink">{message}</p>
       {onRetry && (
@@ -28,6 +33,10 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
           Try again
         </Button>
       )}
+      <p className="font-mono text-[10px] uppercase tracking-wider text-ink-faint">
+        <SquareTerminal className="mr-1 inline h-3 w-3" aria-hidden="true" />
+        codemedic — session resumable
+      </p>
     </div>
   );
 }
